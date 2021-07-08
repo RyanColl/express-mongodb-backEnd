@@ -42,21 +42,27 @@ router.get('/api/numbers/:id', async (request, response) => {
 		response.status(404).end()
 	  }
   })
-router.post('api/numbers', async (req, res) => {
+router.post('/api/numbers', async (req, res) => {
 	const body = req.body
-      
-    if (!body.content) {
+    if (!body.name || !body.number) {
         return res.status(400).json({ 
         	error: 'content missing' 
         })
     }
-	let note = new Note({
-		content: body.content,
-		important: body.important || false,
+	let num = new Num({
+		name: body.name,
+		number: body.number,
 		date: new Date()
 	})
-	await note.save()
+	await num.save()
 	console.log('note saved')
+	// console.log('function passed');
+})
+
+router.delete('/api/numbers/:id', async (req, res) => {
+	const id = Number(req.params.id)
+	await Num.deleteOne({ _id: id })
+	console.log('deleted')
 })
 
 
