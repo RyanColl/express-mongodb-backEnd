@@ -1,6 +1,7 @@
 
 const router = require('express').Router();
 const Note = require('../mongo/models/noteModel')
+const Num = require('../mongo/models/numberModel')
 const mongodb = require("mongodb");
 const database = include('./mongo/connection');
 // just a test and role model for other routes
@@ -8,13 +9,13 @@ router.get('/test', async (req, res) => {
 	console.log("page hit");
 	try {
 		console.log("Test");
-        // const note = new Note({
-        //     content: 'HTML is Easy',
-        //     date: new Date(),
-        //     important: false,
-        //   })
+        const num = new Num({
+            name: 'Ryan',
+			number: 6047618865,
+            date: new Date(),
+          })
           
-		//   await note.save()
+		  await num.save()
 		  console.log('note saved')
 		res.render('index');
 	}
@@ -26,22 +27,22 @@ router.get('/test', async (req, res) => {
 });
 
 
-// finds all the notes and returns as foundNotes in json format for api requests
-router.get('api/notes', async (req, res) => {
-	const foundNotes = await Note.find({})
-	console.log(foundNotes)
-	res.json(foundNotes)
+// finds all the numbers and returns as foundNumbers in json format for api requests
+router.get('/api/numbers', async (req, res) => {
+	const foundNumbers = await Num.find({})
+	console.log(foundNumbers)
+	res.json(foundNumbers)
 })
-app.get('/api/notes/:id', async (request, response) => {
+router.get('/api/numbers/:id', async (request, response) => {
 	const id = Number(request.params.id)
-	const note =  await Note.findOne({ _id: req.query.id })
-	if (note) {
-		response.json(note)
+	const num =  await Num.findOne({ _id: id })
+	if (num) {
+		response.json(num)
 	  } else {
 		response.status(404).end()
 	  }
   })
-router.post('api/notes', async (req, res) => {
+router.post('api/numbers', async (req, res) => {
 	const body = req.body
       
     if (!body.content) {
